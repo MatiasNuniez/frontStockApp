@@ -1,24 +1,30 @@
 import React, { useState, useEffect } from 'react'
+import { productInterface } from '../interfaces/product.interface';
+import axios from 'axios';
 
 export const Products = () => {
-  
-  // const [data, setData] = useState<>([]);
+
+  const [data, setData] = useState<Array<productInterface>>([]);
 
   const getProducts = async () => {
     try {
-      const response = await fetch('http://localhost:3000/products');
-      const data = await response.json();
+      const response = await axios.get('http://localhost:3000/products', {
+        headers: {
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOnsiaWQiOjEsImVtYWlsIjoibWF0aWFzbnVuaWV6MTkyQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoibWF0aWFzMTIzIiwiaXNBY3RpdmUiOnRydWUsImNyZWF0ZWRBdCI6IjIwMjUtMDEtMjBUMDA6NDQ6MzEuMTA3WiIsInVwZGF0ZWRBdCI6IjIwMjUtMDEtMjBUMDA6NDQ6MzEuMTA3WiJ9LCJpYXQiOjE3Mzc4NDUyMTl9.ACma6ix3c20bSOGf0YUWu2RuoUGs3a-bJUPYQt7S8ME`
+        }
+      });
+      const data = response.data;
       console.log(data);
-      // setData(data);
+      setData(data);
     } catch (error) {
       console.error(error);
     }
   }
 
   useEffect(() => {
-    
-  }, [])  
-  
+    getProducts();
+  }, [])
+
   return (
     <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
       <h1 className='font-semibold m-6 text-center text-lg sm:text-xl lg:text-2xl'>Listado de productos</h1>
@@ -27,7 +33,7 @@ export const Products = () => {
           type="text"
           placeholder="Buscar producto..."
           className="p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 w-full sm:w-1/2 lg:w-1/3"
-          // onChange={(e) => handleSearch(e.target.value)}
+        // onChange={(e) => handleSearch(e.target.value)}
         />
       </div>
       <div className="flex justify-center mb-4 flex-wrap sm:flex-nowrap">
@@ -49,38 +55,40 @@ export const Products = () => {
         />
       </div>
       <table className="min-w-full divide-y divide-gray-200">
-      <thead className="bg-gray-50">
-        <tr>
-        <th scope="col" className="px-2 sm:px-4 lg:px-6 py-3 text-left text-xs sm:text-sm lg:text-base font-medium text-gray-500 uppercase tracking-wider">
-          Nombre
-        </th>
-        <th scope="col" className="px-2 sm:px-4 lg:px-6 py-3 text-left text-xs sm:text-sm lg:text-base font-medium text-gray-500 uppercase tracking-wider">
-          Stock
-        </th>
-        <th scope="col" className="px-2 sm:px-4 lg:px-6 py-3 text-left text-xs sm:text-sm lg:text-base font-medium text-gray-500 uppercase tracking-wider">
-          Precio
-        </th>
-        <th scope="col" className="px-2 sm:px-4 lg:px-6 py-3 text-left text-xs sm:text-sm lg:text-base font-medium text-gray-500 uppercase tracking-wider">
-          Cantidad x Caja
-        </th>
-        <th scope="col" className="px-2 sm:px-4 lg:px-6 py-3 text-left text-xs sm:text-sm lg:text-base font-medium text-gray-500 uppercase tracking-wider">
-          Tipo
-        </th>
-        <th scope="col" className="px-2 sm:px-4 lg:px-6 py-3 text-left text-xs sm:text-sm lg:text-base font-medium text-gray-500 uppercase tracking-wider">
-          Seleccionado
-        </th>
-        </tr>
-      </thead>
-      <tbody className="bg-white divide-y divide-gray-200">
-        <tr>
-        <td className="px-2 sm:px-4 lg:px-6 py-4 whitespace-nowrap text-sm sm:text-base lg:text-lg font-medium text-gray-900">Product 1</td>
-        <td className="px-2 sm:px-4 lg:px-6 py-4 whitespace-nowrap text-sm sm:text-base lg:text-lg text-gray-500">100</td>
-        <td className="px-2 sm:px-4 lg:px-6 py-4 whitespace-nowrap text-sm sm:text-base lg:text-lg text-gray-500">$10.00</td>
-        <td className="px-2 sm:px-4 lg:px-6 py-4 whitespace-nowrap text-sm sm:text-base lg:text-lg text-gray-500">20</td>
-        <td className="px-2 sm:px-4 lg:px-6 py-4 whitespace-nowrap text-sm sm:text-base lg:text-lg text-gray-500">Medicamentos</td>
-        <td className="px-2 sm:px-4 lg:px-6 py-4 whitespace-nowrap text-sm sm:text-base lg:text-lg text-gray-500"><input type="checkbox" name="selectProduct" id="selectProduct"/></td>
-        </tr>
-      </tbody>
+        <thead className="bg-gray-50">
+          <tr>
+            <th scope="col" className="px-2 sm:px-4 lg:px-6 py-3 text-left text-xs sm:text-sm lg:text-base font-medium text-gray-500 uppercase tracking-wider">
+              Nombre
+            </th>
+            <th scope="col" className="px-2 sm:px-4 lg:px-6 py-3 text-left text-xs sm:text-sm lg:text-base font-medium text-gray-500 uppercase tracking-wider">
+              Stock
+            </th>
+            <th scope="col" className="px-2 sm:px-4 lg:px-6 py-3 text-left text-xs sm:text-sm lg:text-base font-medium text-gray-500 uppercase tracking-wider">
+              Precio
+            </th>
+            <th scope="col" className="px-2 sm:px-4 lg:px-6 py-3 text-left text-xs sm:text-sm lg:text-base font-medium text-gray-500 uppercase tracking-wider">
+              Cantidad x Caja
+            </th>
+            <th scope="col" className="px-2 sm:px-4 lg:px-6 py-3 text-left text-xs sm:text-sm lg:text-base font-medium text-gray-500 uppercase tracking-wider">
+              Tipo
+            </th>
+            <th scope="col" className="px-2 sm:px-4 lg:px-6 py-3 text-left text-xs sm:text-sm lg:text-base font-medium text-gray-500 uppercase tracking-wider">
+              Seleccionado
+            </th>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
+            {data.map((product) => (
+              <tr key={product.id}>
+                          <td className="px-2 sm:px-4 lg:px-6 py-4 whitespace-nowrap text-sm sm:text-base lg:text-lg font-medium text-gray-900">{product.name}</td>
+                          <td className="px-2 sm:px-4 lg:px-6 py-4 whitespace-nowrap text-sm sm:text-base lg:text-lg text-gray-500">{product.stock}</td>
+                          <td className="px-2 sm:px-4 lg:px-6 py-4 whitespace-nowrap text-sm sm:text-base lg:text-lg text-gray-500">{product.price}</td>
+                          <td className="px-2 sm:px-4 lg:px-6 py-4 whitespace-nowrap text-sm sm:text-base lg:text-lg text-gray-500">{product.quantity}</td>
+                          <td className="px-2 sm:px-4 lg:px-6 py-4 whitespace-nowrap text-sm sm:text-base lg:text-lg text-gray-500">{product.category}</td>
+                          <td className="px-2 sm:px-4 lg:px-6 py-4 whitespace-nowrap text-sm sm:text-base lg:text-lg text-gray-500"><input type="checkbox" name="selectProduct" id="selectProduct" /></td>
+              </tr>
+            ))}
+        </tbody>
       </table>
     </div>
   )

@@ -1,9 +1,10 @@
 import React from 'react';
 import './App.css';
 import { Login } from './components/login';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router';
+import { BrowserRouter, Routes, Route, useLocation, Form } from 'react-router';
 import { Products } from './components/products';
 import { Month_end } from './components/month-end';
+import { Formulario } from './components/formulario';
 
 function App() {
   return (
@@ -48,6 +49,8 @@ function MainContent() {
         <Route path="/products" element={<Products />} />
         <Route path="/resetPassword" element={<Login />} />
         <Route path="/history" element={<Month_end />} />
+        <Route path="/addProduct" element={<Formulario />} />
+        <Route path="/addCategory" element={<Formulario/>} />
       </Routes>
     </>
   );
