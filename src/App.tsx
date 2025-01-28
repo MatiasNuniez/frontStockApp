@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route, useLocation, Form } from 'react-router';
 import { Products } from './components/products';
 import { Month_end } from './components/month-end';
 import { Formulario } from './components/formulario';
+import ProtectedRoute from './components/protectedRoute';
 
 function App() {
   return (
@@ -25,12 +26,22 @@ function MainContent() {
             <ul className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
               <li>
                 <a href="/products" className="hover:underline font-semibold">
-                  Products
+                  Productos
                 </a>
               </li>
               <li>
                 <a href="/history" className="hover:underline font-semibold">
-                  History
+                  Historial cierres
+                </a>
+              </li>
+              <li>
+                <a href="/addProduct" className="hover:underline font-semibold">
+                  Cargar productos
+                </a>
+              </li>
+              <li>
+                <a href="/addCategory" className="hover:underline font-semibold">
+                  Cargar categorias
                 </a>
               </li>
             </ul>
@@ -45,12 +56,12 @@ function MainContent() {
       )}
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Login />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/resetPassword" element={<Login />} />
-        <Route path="/history" element={<Month_end />} />
-        <Route path="/addProduct" element={<Formulario />} />
-        <Route path="/addCategory" element={<Formulario/>} />
+        <Route path="/register" element={<ProtectedRoute> <Login /> </ProtectedRoute>} />
+        <Route path="/products" element={<ProtectedRoute> <Products /> </ProtectedRoute>} />
+        <Route path="/resetPassword" element={<ProtectedRoute><Login /> </ProtectedRoute>} />
+        <Route path="/history" element={<ProtectedRoute> <Month_end /> </ProtectedRoute>} />
+        <Route path="/addProduct" element={<ProtectedRoute> <Formulario /> </ProtectedRoute>} />
+        <Route path="/addCategory" element={<ProtectedRoute> <Formulario /></ProtectedRoute>} />
       </Routes>
     </>
   );

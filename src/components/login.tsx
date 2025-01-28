@@ -9,7 +9,6 @@ export const Login: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-
     const [loginState, setLoginState] = useState<LoginI>({ email: '', password: '' });
     const [resetState, setResetState] = useState<string>('');
 
