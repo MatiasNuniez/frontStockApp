@@ -14,7 +14,7 @@ export const Formulario = () => {
 
   const location = useLocation();
 
-  const [productState, setproductState] = useState<productInterface>({ name: '', stock: 0, price: 0, quantity: 0, category: 1, dateSell: 15 })
+  const [productState, setproductState] = useState<productInterface>({ name: '', stock: 0, price: 0, quantity: 0, category: 0 })
 
   const [categoryState, setcategoryState] = useState<categoryInterface>({ name: '' })
 

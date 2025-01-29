@@ -4,6 +4,5 @@ export interface productInterface {
     price: number;
     quantity: number;
     category: number;
-    dateSell:number
-    id?: string;
+    id?: number;
 }
