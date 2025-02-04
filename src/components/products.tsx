@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 
 const filterProducts = (products: Array<productInterface>, searchTerm: string) => {
   if (!searchTerm) return products;
-  return products.filter((product) => 
+  return products.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 };
@@ -17,19 +17,18 @@ export const Products = () => {
   const [data, setData] = useState<Array<productInterface>>([]);
   const [checkState, setCheckState] = useState<boolean>(false);
   const [selectedProductId, setSelectedProductId] = useState<number>(-1);
-  const [totalSellMonth] = useState<number>(0);
   const [search, setSearch] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalOption, setModalOption] = useState<string>('');
   const [selectedActionId, setSelectedActionId] = useState<number>(0);
   const [actionType, setActionType] = useState<string>('');
   const [isActionModalOpen, setIsActionModalOpen] = useState<boolean>(false);
-  const [editProduct, setEditProduct] = useState<productInterface>({ 
-    name: '', 
-    price: 0, 
-    category: 0, 
-    quantity: 0, 
-    stock: 0 
+  const [editProduct, setEditProduct] = useState<productInterface>({
+    name: '',
+    price: 0,
+    category: 0,
+    quantity: 0,
+    stock: 0
   });
 
   const getProducts = async () => {
@@ -63,7 +62,7 @@ export const Products = () => {
       if (product.id === id) {
         return {
           ...product,
-          stock: option === "cargar" 
+          stock: option === "cargar"
             ? product.stock + quantity
             : Math.max(0, product.stock - quantity)
         };
@@ -74,16 +73,16 @@ export const Products = () => {
 
   const updateProduct = (updatedProduct: productInterface) => {
     if (!updatedProduct) return;
-    
+
     try {
       setData(prevData => prevData.map(product =>
         product.id === updatedProduct.id ? { ...product, ...updatedProduct } : product
       ));
     } catch (error) {
-      Swal.fire({ 
-        title: 'Error', 
-        text: "Error actualizando el producto", 
-        icon: 'error' 
+      Swal.fire({
+        title: 'Error',
+        text: "Error actualizando el producto",
+        icon: 'error'
       });
     }
   };
@@ -111,10 +110,10 @@ export const Products = () => {
 
   const handleActionClick = (option: string) => {
     if (selectedProductId === -1 || !checkState) {
-      Swal.fire({ 
-        title: 'Error', 
-        text: 'Seleccione un producto por favor', 
-        icon: 'error' 
+      Swal.fire({
+        title: 'Error',
+        text: 'Seleccione un producto por favor',
+        icon: 'error'
       });
       return;
     }
@@ -122,8 +121,18 @@ export const Products = () => {
     setIsModalOpen(true);
   };
 
+  const getTotalSellMonth = async () => {
+    try {
+      const total = await axios.get('https://localhost:3000/totalSellMonth', { headers: { Authorization: `${localStorage.getItem('token')}` } })
+      console.log(`Total del mes: ${total}`);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     getProducts();
+    getTotalSellMonth();
   }, []);
 
   return (
@@ -131,7 +140,7 @@ export const Products = () => {
       <h1 className='font-semibold m-6 text-center text-lg sm:text-xl lg:text-2xl'>
         Listado de productos
       </h1>
-      
+
       <div className="flex justify-center mb-4">
         <input
           type="text"
@@ -143,28 +152,18 @@ export const Products = () => {
       </div>
 
       <div className="flex justify-center mb-4 flex-wrap sm:flex-nowrap gap-2">
-        <button 
+        <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
           onClick={() => handleActionClick('vender')}
         >
           Vender
         </button>
-        <button 
+        <button
           className="bg-green-500 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded"
           onClick={() => handleActionClick('cargar')}
         >
           Cargar
         </button>
-        <button className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded">
-          Cerrar mes
-        </button>
-        <input
-          type="text"
-          placeholder="Total vendido"
-          className="p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-          value={`$ ${totalSellMonth}`}
-          readOnly
-        />
       </div>
 
       <div className="overflow-x-auto">
@@ -172,7 +171,7 @@ export const Products = () => {
           <thead className="bg-gray-50">
             <tr>
               {['Edit', 'Delete', 'Nombre', 'Stock', 'Precio', 'Cantidad x Caja', 'Tipo', 'Seleccionado'].map((header) => (
-                <th 
+                <th
                   key={header}
                   className="px-2 sm:px-4 lg:px-6 py-3 text-left text-xs sm:text-sm lg:text-base font-medium text-gray-500 uppercase tracking-wider"
                 >
@@ -185,7 +184,7 @@ export const Products = () => {
             {filterProducts(data, search).map((product) => (
               <tr key={product.id}>
                 <td className="px-2 sm:px-4 lg:px-6 py-4 whitespace-nowrap">
-                  <button 
+                  <button
                     onClick={() => {
                       setEditProduct(product);
                       setActionType('edit');
@@ -197,7 +196,7 @@ export const Products = () => {
                   </button>
                 </td>
                 <td className="px-2 sm:px-4 lg:px-6 py-4 whitespace-nowrap">
-                  <button 
+                  <button
                     onClick={() => {
                       setSelectedActionId(product.id || -1);
                       setActionType('delete');
@@ -240,7 +239,7 @@ export const Products = () => {
         </table>
       </div>
 
-      <ModalIncreDecre 
+      <ModalIncreDecre
         isOpen={isModalOpen}
         id={selectedProductId}
         option={modalOption}
@@ -253,7 +252,7 @@ export const Products = () => {
         setCheckState={setCheckState}
       />
 
-      <ModalActions 
+      <ModalActions
         isOpen={isActionModalOpen}
         onClose={() => {
           setSelectedActionId(0);
