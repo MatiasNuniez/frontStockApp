@@ -95,7 +95,6 @@ export const ModalActions: React.FC<ModalProps> = ({
             return;
         }
 
-        // Delete action
         try {
             const token = localStorage.getItem('token');
             const response = await axios.delete(
