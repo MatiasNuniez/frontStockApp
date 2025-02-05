@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { useLocation } from 'react-router'
 import { productInterface } from '../interfaces/product.interface'
 import { categoryInterface } from '../interfaces/category.interface'
 import Swal from 'sweetalert2'
 import axios from 'axios'
+import Cookies from 'js-cookie'
 
 export const Formulario: React.FC = () => {
   enum optionEnum {
@@ -11,24 +12,31 @@ export const Formulario: React.FC = () => {
     category = 'category',
   }
 
+  interface categoriesI {
+    id: number;
+    name: string;
+  }
+
   const location = useLocation();
   const [locationState, setlocationState] = useState<string>('');
-  
-  const [categoryState, setcategoryState] = useState<categoryInterface>({ 
-    name: '' 
+
+  const [categoryState, setcategoryState] = useState<categoryInterface>({
+    name: ''
   });
 
-  const [productState, setproductState] = useState<productInterface>({ 
-    name: '', 
-    stock: 0, 
-    price: 0, 
-    quantity: 0, 
-    category: 2 
+  const [productState, setproductState] = useState<productInterface>({
+    name: '',
+    stock: 0,
+    price: 0,
+    quantity: 0,
+    category: ''
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, option: optionEnum) => {
+  const [categoriesState, setCategoriesState] = useState<Array<categoriesI>>([])
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>, option: optionEnum) => {
     const { name, value } = e.target;
-    
+
     if (!option || (option !== optionEnum.product && option !== optionEnum.category)) {
       Swal.fire({
         title: 'Error',
@@ -58,7 +66,7 @@ export const Formulario: React.FC = () => {
       stock: 0,
       price: 0,
       quantity: 0,
-      category: 2
+      category: ''
     });
     setcategoryState({
       name: ''
@@ -79,10 +87,10 @@ export const Formulario: React.FC = () => {
     try {
       const response = await axios.post('http://localhost:3000/products', productState, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${Cookies.get('token')}`
         }
       });
-      
+
       if (response.status === 201) {
         Swal.fire({
           title: 'Éxito',
@@ -118,10 +126,10 @@ export const Formulario: React.FC = () => {
     try {
       const response = await axios.post('http://localhost:3000/categories', categoryState, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${Cookies.get('token')}`
         }
       });
-      
+
       if (response.status === 201) {
         Swal.fire({
           title: 'Éxito',
@@ -147,9 +155,39 @@ export const Formulario: React.FC = () => {
     option === optionEnum.product ? addProduct() : addCategory();
   };
 
+  const getAllCategories = useCallback(async () => {
+    try {
+      const categories: categoriesI[] = await axios
+        .get('http://localhost:3000/categories', {
+          headers: { Authorization: `Bearer ${Cookies.get('token')}` },
+        })
+        .then(response => response.data);
+  
+      if (categories.length > 0) {
+        setCategoriesState(categories);
+      } else {
+        Swal.fire({
+          title: 'Error',
+          text: 'No hay categorías disponibles',
+          icon: 'error',
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        title: 'Error al cargar categorías',
+        text: 'Debe existir al menos una categoría antes de cargar un producto',
+        icon: 'error',
+      });
+    }
+  }, []);
+
   useEffect(() => {
     setlocationState(location.pathname === '/addProduct' ? 'product' : 'category');
-  }, [location.pathname]);
+  
+    if (location.pathname === '/addProduct') {
+      getAllCategories();
+    }
+  }, [location.pathname, getAllCategories]);
 
   return (
     <div>
@@ -207,6 +245,27 @@ export const Formulario: React.FC = () => {
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-1"
                 onChange={(e) => handleInputChange(e, optionEnum.product)}
               />
+            </div>
+            <div>
+              <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+                Categoria
+              </label>
+              <select
+                id="category"
+                name="category"
+                value={productState.category}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-1"
+                onChange={(e) => handleInputChange(e, optionEnum.product)}
+              >
+                <option value="" disabled>
+                  Selecciona una categoría
+                </option>
+                {categoriesState.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
             </div>
           </>
         ) : (

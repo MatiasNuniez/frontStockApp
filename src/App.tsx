@@ -1,9 +1,8 @@
 import React from 'react';
 import './App.css';
 import { Login } from './components/login';
-import { BrowserRouter, Routes, Route, useLocation, Form } from 'react-router';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router';
 import { Products } from './components/products';
-import { Month_end } from './components/month-end';
 import { Formulario } from './components/formulario';
 import ProtectedRoute from './components/protectedRoute';
 
@@ -59,7 +58,6 @@ function MainContent() {
         <Route path="/register" element={<ProtectedRoute> <Login /> </ProtectedRoute>} />
         <Route path="/products" element={<ProtectedRoute> <Products /> </ProtectedRoute>} />
         <Route path="/resetPassword" element={<ProtectedRoute><Login /> </ProtectedRoute>} />
-        <Route path="/history" element={<ProtectedRoute> <Month_end /> </ProtectedRoute>} />
         <Route path="/addProduct" element={<ProtectedRoute> <Formulario /> </ProtectedRoute>} />
         <Route path="/addCategory" element={<ProtectedRoute> <Formulario /></ProtectedRoute>} />
       </Routes>

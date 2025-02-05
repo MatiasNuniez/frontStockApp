@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import Cookies from 'js-cookie';
 
 interface ModalProps {
     isOpen: boolean;
@@ -20,7 +21,7 @@ export const ModalIncreDecre: React.FC<ModalProps> = ({ isOpen, onClose, id, opt
                 const endpoint = `http://localhost:3000/products/${id}/${option === 'cargar' ? 'incrementStock' : 'decrementStock'}`;
                 const response = await axios.patch(endpoint, { quantity },
                     {
-                        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+                        headers: { Authorization: `Bearer ${Cookies.get('token')}` }
                     });
 
                 if (response.status === 204) {

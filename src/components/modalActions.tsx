@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { productInterface } from '../interfaces/product.interface';
+import Cookies from 'js-cookie';
 
 interface ModalProps {
     editElement: productInterface;
@@ -27,7 +28,7 @@ export const ModalActions: React.FC<ModalProps> = ({
         stock: 0,
         price: 0,
         quantity: 0,
-        category: 0,
+        category: '',
         id: -1
     });
 
@@ -39,7 +40,7 @@ export const ModalActions: React.FC<ModalProps> = ({
             stock: editElement.stock || 0,
             price: editElement.price || 0,
             quantity: editElement.quantity || 0,
-            category: editElement.category || 0,
+            category: editElement.category || '',
             id: option === 'edit' ? editElement.id || -1 : id || -1
         });
     }, [editElement, id, option, isOpen]);
@@ -65,7 +66,7 @@ export const ModalActions: React.FC<ModalProps> = ({
                     category: formData.category
                 };
 
-                const token = localStorage.getItem('token');
+                const token = Cookies.get('token');
                 const response = await axios.patch(
                     `http://localhost:3000/products/${formData.id}`,
                     productUpdate,
@@ -96,7 +97,7 @@ export const ModalActions: React.FC<ModalProps> = ({
         }
 
         try {
-            const token = localStorage.getItem('token');
+            const token = Cookies.get('token');
             const response = await axios.delete(
                 `http://localhost:3000/products/${formData.id}`,
                 {

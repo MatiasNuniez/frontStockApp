@@ -1,6 +1,7 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import { Navigate } from "react-router";
 import axios from "axios";
+import Cookies from 'js-cookie';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -31,7 +32,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get('token')
 
     if (!token) {
       setIsValid(false);

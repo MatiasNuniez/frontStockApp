@@ -5,6 +5,7 @@ import axios from 'axios';
 import { ModalIncreDecre } from './modalIncreDecre';
 import { ModalActions } from './modalActions';
 import Swal from 'sweetalert2';
+import Cookies from 'js-cookie';
 
 const filterProducts = (products: Array<productInterface>, searchTerm: string) => {
   if (!searchTerm) return products;
@@ -26,14 +27,14 @@ export const Products = () => {
   const [editProduct, setEditProduct] = useState<productInterface>({
     name: '',
     price: 0,
-    category: 0,
+    category:'',
     quantity: 0,
     stock: 0
   });
 
   const getProducts = async () => {
     try {
-      const token = localStorage.getItem('token') || '';
+      const token = Cookies.get('token') || '';
       const response = await axios.get('http://localhost:3000/products', {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -121,18 +122,8 @@ export const Products = () => {
     setIsModalOpen(true);
   };
 
-  const getTotalSellMonth = async () => {
-    try {
-      const total = await axios.get('https://localhost:3000/totalSellMonth', { headers: { Authorization: `${localStorage.getItem('token')}` } })
-      console.log(`Total del mes: ${total}`);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   useEffect(() => {
     getProducts();
-    getTotalSellMonth();
   }, []);
 
   return (
@@ -258,7 +249,7 @@ export const Products = () => {
           setSelectedActionId(0);
           setActionType('');
           setEditProduct({
-            category: 0,
+            category: '',
             name: '',
             price: 0,
             quantity: 0,
