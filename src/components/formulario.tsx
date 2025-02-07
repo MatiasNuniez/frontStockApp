@@ -29,7 +29,8 @@ export const Formulario: React.FC = () => {
     stock: 0,
     price: 0,
     quantity: 0,
-    category: ''
+    category: '',
+    userId:-1
   });
 
   const [categoriesState, setCategoriesState] = useState<Array<categoriesI>>([])
@@ -74,7 +75,7 @@ export const Formulario: React.FC = () => {
   };
 
   const addProduct = async () => {
-    if (productState.name === '' || productState.stock <= 0 || productState.price <= 0 || productState.quantity <= 0) {
+    if (productState.name === '' || productState.stock <= 0 || productState.price <= 0 || productState.quantity <= 0 || productState.userId === -1 ) {
       Swal.fire({
         title: 'Error',
         text: 'Todos los campos son obligatorios',
@@ -183,6 +184,16 @@ export const Formulario: React.FC = () => {
 
   useEffect(() => {
     setlocationState(location.pathname === '/addProduct' ? 'product' : 'category');
+
+    let userId: number = parseInt(Cookies.get('userId') || '-1');
+
+    if (!isNaN(userId) && location.pathname === '/addProduct') {
+      setproductState(prevState => ({
+        ...prevState,
+        userId: userId
+      }));
+    }
+    
   
     if (location.pathname === '/addProduct') {
       getAllCategories();

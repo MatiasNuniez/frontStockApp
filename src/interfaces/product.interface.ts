@@ -5,4 +5,5 @@ export interface productInterface {
     quantity: number;
     category: string;
     id?: number;
+    userId?:number;
 }

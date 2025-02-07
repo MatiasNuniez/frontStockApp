@@ -3,6 +3,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { productInterface } from '../interfaces/product.interface';
 import Cookies from 'js-cookie';
+import { categoryInterface } from '../interfaces/category.interface';
 
 interface ModalProps {
     editElement: productInterface;
@@ -12,6 +13,8 @@ interface ModalProps {
     onClose: () => void;
     changeElement: (element: productInterface) => void;
     deleteElement: (id: number) => void;
+    categories: categoryInterface[];
+    id_category:number;
 }
 
 export const ModalActions: React.FC<ModalProps> = ({
@@ -19,6 +22,8 @@ export const ModalActions: React.FC<ModalProps> = ({
     id,
     option,
     isOpen,
+    categories,
+    id_category,
     onClose,
     changeElement,
     deleteElement
@@ -52,6 +57,14 @@ export const ModalActions: React.FC<ModalProps> = ({
         setFormData(prev => ({
             ...prev,
             [name]: name === 'name' ? value : Number(value)
+        }));
+    };
+
+    const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
         }));
     };
 
@@ -132,7 +145,6 @@ export const ModalActions: React.FC<ModalProps> = ({
                 {option === 'edit' ? (
                     <form onSubmit={(e) => { e.preventDefault(); handleAction(); }} className="space-y-4">
                         <h2 className="text-xl font-bold mb-4">Editar Producto</h2>
-                        
                         <div className="space-y-3">
                             <label className="block">
                                 <span className="text-gray-700">Nombre:</span>
@@ -180,13 +192,19 @@ export const ModalActions: React.FC<ModalProps> = ({
 
                             <label className="block">
                                 <span className="text-gray-700">Categoría:</span>
-                                <input
-                                    type="number"
+                                <select
                                     name="category"
                                     value={formData.category}
-                                    onChange={handleInputChange}
+                                    onChange={handleSelectChange}
                                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                />
+                                >
+                                    <option value="">Seleccione una categoría</option>
+                                    {categories.map(category => (
+                                        <option key={category.id} value={category.id}>
+                                            {category.name}
+                                        </option>
+                                    ))}
+                                </select>
                             </label>
                         </div>
 
