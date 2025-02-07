@@ -1,4 +1,4 @@
 export interface categoryInterface {
     name:string;
-    id:number;
+    id?:number;
 }

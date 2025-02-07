@@ -13,8 +13,6 @@ interface ModalProps {
     onClose: () => void;
     changeElement: (element: productInterface) => void;
     deleteElement: (id: number) => void;
-    categories: categoryInterface[];
-    id_category:number;
 }
 
 export const ModalActions: React.FC<ModalProps> = ({
@@ -22,8 +20,6 @@ export const ModalActions: React.FC<ModalProps> = ({
     id,
     option,
     isOpen,
-    categories,
-    id_category,
     onClose,
     changeElement,
     deleteElement
@@ -37,9 +33,27 @@ export const ModalActions: React.FC<ModalProps> = ({
         id: -1
     });
 
+    const [categoriesState, setCategoriesState] = useState<Array<categoryInterface>>([])
+
+
+    const getCategories = async () => {
+        try {
+            const categories = await axios.get('http://localhost:3000/categories', { headers: { Authorization: `Bearer ${Cookies.get('token')}` } })
+            if (categories.status === 200) {
+                setCategoriesState(categories.data)
+                return;
+            }
+            Swal.fire({ title: 'Error', text: 'No se puedo encontrar categorias', icon: 'error' })
+        } catch (error) {
+            Swal.fire({ title: 'Error', text: 'Error al consultar a la base de datos', icon: 'error' })
+        }
+    }
+
     useEffect(() => {
         if (!isOpen) return;
-        
+
+        getCategories();
+
         setFormData({
             name: editElement.name || '',
             stock: editElement.stock || 0,
@@ -49,6 +63,7 @@ export const ModalActions: React.FC<ModalProps> = ({
             id: option === 'edit' ? editElement.id || -1 : id || -1
         });
     }, [editElement, id, option, isOpen]);
+
 
     if (!isOpen) return null;
 
@@ -199,7 +214,7 @@ export const ModalActions: React.FC<ModalProps> = ({
                                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                                 >
                                     <option value="">Seleccione una categoría</option>
-                                    {categories.map(category => (
+                                    {categoriesState.map(category => (
                                         <option key={category.id} value={category.id}>
                                             {category.name}
                                         </option>
