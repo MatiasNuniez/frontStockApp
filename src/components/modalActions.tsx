@@ -34,6 +34,7 @@ export const ModalActions: React.FC<ModalProps> = ({
     });
 
     const [categoriesState, setCategoriesState] = useState<Array<categoryInterface>>([])
+    
 
 
     const getCategories = async () => {
@@ -93,7 +94,7 @@ export const ModalActions: React.FC<ModalProps> = ({
                     quantity: formData.quantity,
                     category: formData.category
                 };
-
+                
                 const token = Cookies.get('token');
                 const response = await axios.patch(
                     `http://localhost:3000/products/${formData.id}`,
@@ -109,7 +110,8 @@ export const ModalActions: React.FC<ModalProps> = ({
                         text: 'Se editó el producto correctamente',
                         icon: 'success'
                     });
-                    changeElement({ ...productUpdate, id: formData.id });
+                    const category_name = categoriesState.filter((category) => category.id === parseInt(productUpdate.category))
+                    changeElement({ ...productUpdate, id: formData.id, category: category_name[0].name });
                     onClose();
                 } else {
                     throw new Error('Error en la respuesta del servidor');
@@ -179,7 +181,8 @@ export const ModalActions: React.FC<ModalProps> = ({
                                     name="stock"
                                     value={formData.stock}
                                     onChange={handleInputChange}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    readOnly
+                                    className="mt-1 block w-full rounded-md bg-gray-100 cursor-not-allowed"
                                 />
                             </label>
 
@@ -199,9 +202,9 @@ export const ModalActions: React.FC<ModalProps> = ({
                                 <input
                                     type="number"
                                     name="quantity"
+                                    onChange={handleInputChange}
                                     value={formData.quantity}
-                                    readOnly
-                                    className="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 cursor-not-allowed"
+                                    className="mt-1 block w-full rounded-md border-gray-300 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                                 />
                             </label>
 

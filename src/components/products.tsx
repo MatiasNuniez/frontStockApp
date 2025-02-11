@@ -27,7 +27,7 @@ export const Products = () => {
   const [editProduct, setEditProduct] = useState<productInterface>({
     name: '',
     price: 0,
-    category:'',
+    category: '',
     quantity: 0,
     stock: 0
   });
@@ -172,7 +172,7 @@ export const Products = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {filterProducts(data, search).map((product) => (
+            {filterProducts(data, search).length > 0 ? filterProducts(data, search).map((product) => (
               <tr key={product.id}>
                 <td className="px-2 sm:px-4 lg:px-6 py-4 whitespace-nowrap">
                   <button
@@ -225,7 +225,10 @@ export const Products = () => {
                   />
                 </td>
               </tr>
-            ))}
+            )) :<tr><td colSpan={8} className='px-2 sm:px-4 lg:px-6 py-4 whitespace-nowrap text-center'>
+                No hay productos
+              </td></tr>
+            }
           </tbody>
         </table>
       </div>
